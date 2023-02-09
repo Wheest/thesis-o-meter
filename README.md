@@ -9,12 +9,11 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-<!-- [![Contributors][contributors-shield]][contributors-url] -->
-<!-- [![Forks][forks-shield]][forks-url] -->
-<!-- [![Stargazers][stars-shield]][stars-url] -->
+<div align="center">
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![Website][website-shield]][website-url]
+</div>
 
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
@@ -55,7 +54,7 @@ The system is enabled by other free open tools:
 - [x] Extract page count
 - [ ] Extract number of references
 - [ ] Extract number of figures
-- [ ] Give more info with breakdown (e.g., number of sections/chapters, words per section/sections)
+- [ ] Give more info with breakdown (e.g., number of sections/chapters, words per section/chapter)
 
 ## Critique
 
