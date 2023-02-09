@@ -28,6 +28,9 @@
   </p>
 </div>
 
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
 This repository contains the basic tooling I used to keep track of my writing progress for my PhD thesis, when I started focusing on write-up in 2023.
 
 I am [not](https://gousios.org/sw/tom.html) the first person to have this idea, and [this letter](https://web.archive.org/web/20060823213221/https://www.cl.cam.ac.uk/~akw27/thesisometer-explained.txt) explains the how and why.
