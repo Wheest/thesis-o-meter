@@ -84,9 +84,8 @@ sudo make install
 
 ### git management
 
-The code assumes your LaTeX project is a git repo (which is probably should be).
-If you are using Overleaf, you can clone using git in the settings in the menu.
-
+The code assumes your LaTeX project is a git repo (which if it is not, it probably should be).
+If you are using Overleaf, you can clone using git in the settings in the menu on the left.
 
 For this tool to be automated, you should ensure that your git credentials for your repo are stashed, so you do not need to enter them every time.
 If using Overleaf or HTTPS, you could run from within your thesis directory:
