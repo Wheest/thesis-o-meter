@@ -14,6 +14,7 @@
 <!-- [![Stargazers][stars-shield]][stars-url] -->
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+[![Website][website-shield]][website-url]
 
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
@@ -150,3 +151,6 @@ Run `crontab -e`, and add the invocation to the bash script, for example to run 
 [stars-url]: https://github.com/Wheest/thesis-o-meter/stargazers
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/perry-gibson/
+[website-shield]:
+https://img.shields.io/badge/website-gibsonic.org-brightgreen?style=for-the-badge&logo=appveyor
+[website-url]: https://www.gibsonc.org/
