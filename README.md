@@ -9,11 +9,11 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-<div align="center">
+
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![Website][website-shield]][website-url]
-</div>
+
 
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
