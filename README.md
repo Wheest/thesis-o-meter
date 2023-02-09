@@ -54,7 +54,7 @@ The system is enabled by other free open tools:
 - [x] Extract page count
 - [ ] Extract number of references
 - [ ] Extract number of figures
-- [ ] Give more details info breakdown (e.g., number of sections/chapters, words per section/sections)
+- [ ] Give more info with breakdown (e.g., number of sections/chapters, words per section/sections)
 
 ## Critique
 
@@ -82,7 +82,7 @@ make
 sudo make install
 ```
 
-### git LaTeX project
+### git management
 
 The code assumes your LaTeX project is a git repo (which is probably should be).
 If you are using Overleaf, you can clone using git in the settings in the menu.
@@ -93,17 +93,16 @@ If using Overleaf or HTTPS, you could run from within your thesis directory:
 
 ```
 git config --local credential.helper store
-
 ```
 And then run `git pull` and enter your details one more time.
 
 However, there are some security implications to doing this, as it will store your credentials in clear text in a local file (`.git-credentials`) under your project directory.
 If you are using GitHub, GitLab, or similar, you could create a deployment key, which can mitigate a lot of the security risks.
-Alternatively, you can leverage a credential manager to store things, see this [StackOverflow post](https://stackoverflow.com/a/5343146/6267719)
+Alternatively, you can leverage a credential manager to store things, see this [StackOverflow post](https://stackoverflow.com/a/5343146/6267719).
 
 ### LaTeX tools
 
-Some extensions may require to compile your document with LaTeX to extract useful info (e.g., number of page).
+Some extensions may require to compile your document with LaTeX to extract useful info (e.g., number of pages).
 If you're using Overleaf, then it may be irritating to set it up to be exactly the same compilation pipeline on the machine you're running this tool.
 If you accept that your numbers will be an estimate, you can save yourself some headaches.
 
@@ -114,7 +113,6 @@ apt-get install texlive-latex-base
 
 You can check if you need any other packages by running `pdflatex $MAIN_TEX_FILE` and noting what failed.
 For me I had to install `texlive-fonts-recommended` too, and then after chasing another missing package for a minute realised that I was fine using 6GiB with the full `texlive-full` package if it meant I could get back to work.
-Count number of references:
 
 ## Run the tool
 
@@ -129,10 +127,10 @@ python3 thesis-o-meter.py \
 
 However, since this is about longer term measurement, you will want probably want to have it run as a cronjob (i.e., automatically, periodically).
 
-Run `crontab -e`, and add the invocation to the bash script, for example to run the script every three hours.
+Run `crontab -e`, and add the invocation to the bash script, for example to run the script every hour.
 
 ``` sh
-0 */3 * * * bash $SOME_DIR/crontab/dlis.sh
+0 */1 * * * bash $SOME_DIR/crontab/$SOME_SCRIPT
 ```
 
 ## Acknowledgments
