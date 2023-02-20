@@ -69,6 +69,10 @@ Features I don't like about my system:
   - Thus, outputs and invocation of the tools used may change and the tool will throw errors
 - The documentation is still pretty spotty
 
+> Why are you even using Python for this?
+
+Sure, maybe a shell scripting language like bash makes more sense for this sort of thing, but Python is my daily driver, and I want to minimise the time I spend working with this system.
+
 ## Install requirements
 
 ### opendex
