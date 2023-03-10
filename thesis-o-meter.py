@@ -5,8 +5,10 @@ import subprocess
 import git
 from datetime import datetime
 import json
+import collections
 
 from file_utils import data_has_changed, generate_pdf, get_page_count
+from tex_file_processor import process_project
 
 
 def get_word_count(main_tex: os.PathLike) -> int:
@@ -38,12 +40,29 @@ def main(args):
     # generate the PDF that we will parse some of our data from
     generate_pdf(main_tex_file)
 
-    # Collect and store data
-    data = {}
+    # Collect and store data from PDF
+    data = collections.defaultdict(int)
     data["time"] = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     data["word_count"] = get_word_count(main_tex_file)
     main_pdf_file = main_tex_file.replace(".tex", ".pdf")
     data["page_count"] = get_page_count(main_pdf_file)
+
+    # get info from our tex files
+    unqiue_queries = ["\\cite{"]
+    commands = ["\\begin{figure*}", "\\begin{figure}", "\\includegraphics["]
+    counts = process_project(main_tex_file, unqiue_queries, commands)
+
+    # combine values with meaningful names
+    for (x, y) in [
+        ("references", "\\cite{"),
+        ("figures", "\\begin{figure*}"),
+        ("figures", "\\begin{figure}"),
+    ]:
+        data[x] += counts[y]
+        del counts[y]
+
+    for k, v in counts.items():
+        data[k] = v
 
     # Check if we need to save the data to file
     os.makedirs(args.log_dir, exist_ok=True)

@@ -52,8 +52,8 @@ The system is enabled by other free open tools:
 - [x] Add automatic git pull
 - [x] Add automatic pdflatex build
 - [x] Extract page count
-- [ ] Extract number of references
-- [ ] Extract number of figures
+- [x] Extract number of references
+- [x] Extract number of figures
 - [ ] Give more info with breakdown (e.g., number of sections/chapters, words per section/chapter)
 
 ## Critique
@@ -61,6 +61,7 @@ The system is enabled by other free open tools:
 Features I like about my system:
 - will only save data if there has been a change since the last update
 - some of the code was written by `code-davinci-002` (e.g. `get_timestamp()` and `get_most_recent_file()`): why should easily verified non-critical path code be written by a human?
+- the method to count instances of TeX commands (using `process_project()`), is pretty extensible
 
 Features I don't like about my system:
 - It relies on using non-Python shell packages, called via `subprocess`, which has some issues
