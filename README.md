@@ -157,4 +157,4 @@ Run `crontab -e`, and add the invocation to the bash script, for example to run 
 [linkedin-url]: https://www.linkedin.com/in/perry-gibson/
 [website-shield]:
 https://img.shields.io/badge/website-gibsonic.org-brightgreen?style=for-the-badge&logo=appveyor
-[website-url]: https://www.gibsonc.org/
+[website-url]: https://www.gibsonic.org/
