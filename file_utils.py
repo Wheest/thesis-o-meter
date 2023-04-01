@@ -4,6 +4,7 @@ import os
 import re
 import json
 import subprocess
+import multiprocessing
 from datetime import datetime
 
 
@@ -48,12 +49,32 @@ def data_has_changed(data, log_dir: os.PathLike):
     return False
 
 
+def press_enter(pipe):
+    """Covers the case that PDF latex wants us to press enter
+    for whatever reason.
+    """
+    try:
+        while True:
+            # Send the Enter key every 5 seconds
+            time.sleep(5)
+            pipe.write("\n")
+            pipe.flush()
+    except BrokenPipeError:
+        pass  # The main process has completed, ignore the error
+
+
 def generate_pdf(main_tex: os.PathLike):
-    # generate the PDF
-    ps = subprocess.Popen(
-        ("pdflatex", main_tex), stdout=subprocess.PIPE, cwd=os.path.dirname(main_tex)
-    )
-    ps.wait()
+    with subprocess.Popen(
+        ("pdflatex", main_tex),
+        stdin=subprocess.PIPE,
+        cwd=os.path.dirname(main_tex),
+    ) as process:
+        enter_manager = multiprocessing.Process(
+            target=press_enter, args=(process.stdin,)
+        )
+        enter_manager.start()
+        process.wait()
+        enter_manager.terminate()
 
 
 def get_page_count(main_pdf: os.PathLike) -> int:
