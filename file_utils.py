@@ -10,10 +10,10 @@ from datetime import datetime
 def get_timestamp(filename):
     # extract timestamp from filename
     # filename is of the form:
-    # 2023-02-03 18:36:22.json
+    # 2023-02-03-18:36:22.json
     # return timestamp as a datetime object
     timestamp = filename.split(".")[0]
-    return datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+    return datetime.strptime(timestamp, "%Y-%m-%d-%H:%M:%S")
 
 
 def get_most_recent_file(directory) -> str:

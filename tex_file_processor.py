@@ -5,14 +5,19 @@ from typing import List, Set, Dict
 import collections
 
 
-def find_occurrences(main_file: os.PathLike, queries: List[str], commands: List[str]):
+def find_occurrences(
+    main_file: os.PathLike,
+    queries: List[str],
+    commands: List[str],
+    root_dir: os.PathLike,
+):
     """Recursively find all files in a project
     assuming they are included using the \input command,
     and find unique occurrences of a list of potential commands (e.g. \cite)
     as well as the counts of commands (e.g. \begin{figure})
     """
-    dirname, fname = os.path.split(main_file)
-    with open(main_file, "r") as f:
+    # dirname, fname = os.path.split(main_file)
+    with open(os.path.join(root_dir, main_file), "r") as f:
         lines = f.readlines()
     instances = []
     occurrences = collections.defaultdict(set)
@@ -24,6 +29,7 @@ def find_occurrences(main_file: os.PathLike, queries: List[str], commands: List[
             continue
         if line.startswith("\\input{"):
             x = line.split("{")[1].split("}")[0]
+            x = x.translate(x.maketrans("", "", "\"'"))  # remove any inverted commas
             if ".tex" not in x:
                 x += ".tex"
             instances.append(x)
@@ -46,7 +52,9 @@ def find_occurrences(main_file: os.PathLike, queries: List[str], commands: List[
     sub_files = []
     for f in instances:
 
-        sf, occ, cmd = find_occurrences(os.path.join(dirname, f), queries, commands)
+        sf, occ, cmd = find_occurrences(
+            os.path.join(root_dir, f), queries, commands, root_dir
+        )
         sub_files += sf
         for k, vs in occ.items():
             occurrences[k].update(vs)
@@ -80,7 +88,8 @@ def process_project(
     :returns:
 
     """
-    x, occs, cmds = find_occurrences(main_file, unique_queries, commands)
+    root_dir, _ = os.path.split(main_file)
+    x, occs, cmds = find_occurrences(main_file, unique_queries, commands, root_dir)
     counts = count_occurrences(occs)
     for k, v in counts.items():
         cmds[k] = v

@@ -49,7 +49,13 @@ def main(args):
 
     # get info from our tex files
     unqiue_queries = ["\\cite{"]
-    commands = ["\\begin{figure*}", "\\begin{figure}", "\\includegraphics["]
+    commands = [
+        "\\begin{figure*}",
+        "\\begin{figure}",
+        "\\includegraphics[",
+        "\\begin{table}",
+        "\\begin{table*}",
+    ]
     counts = process_project(main_tex_file, unqiue_queries, commands)
 
     # combine values with meaningful names
@@ -57,6 +63,8 @@ def main(args):
         ("references", "\\cite{"),
         ("figures", "\\begin{figure*}"),
         ("figures", "\\begin{figure}"),
+        ("tables", "\\begin{table*}"),
+        ("tables", "\\begin{table}"),
     ]:
         data[x] += counts[y]
         del counts[y]
@@ -70,7 +78,9 @@ def main(args):
         return
 
     # Create logfile, if data has changed
-    with open(os.path.join(args.log_dir, data["time"] + ".json"), "w") as f:
+    with open(
+        os.path.join(args.log_dir, data["time"].replace(" ", "-") + ".json"), "w"
+    ) as f:
         json.dump(data, f, indent=2)
 
 
