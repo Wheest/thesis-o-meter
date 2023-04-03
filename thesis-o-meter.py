@@ -55,6 +55,8 @@ def main(args):
         "\\includegraphics[",
         "\\begin{table}",
         "\\begin{table*}",
+        "\\begin{algorithm*}",
+        "\\begin{algorithm}",
     ]
     counts = process_project(main_tex_file, unqiue_queries, commands)
 
@@ -65,6 +67,8 @@ def main(args):
         ("figures", "\\begin{figure}"),
         ("tables", "\\begin{table*}"),
         ("tables", "\\begin{table}"),
+        ("algorithm", "\\begin{algorithm*}"),
+        ("tables", "\\begin{algorithm}"),
     ]:
         data[x] += counts[y]
         del counts[y]

@@ -6,6 +6,7 @@ import json
 import pandas as pd
 import subprocess
 import multiprocessing
+from plyer import notification
 from datetime import datetime
 import time
 
@@ -69,7 +70,7 @@ def press_enter(pipe):
             continue
 
 
-def generate_pdf(main_tex: os.PathLike, timeout: int = 300):
+def generate_pdf(main_tex: os.PathLike, timeout: int = 100):
     with subprocess.Popen(
         ("pdflatex", main_tex),
         stdin=subprocess.PIPE,
