@@ -7,7 +7,7 @@ from datetime import datetime
 import json
 import collections
 
-from file_utils import data_has_changed, generate_pdf, get_page_count
+from file_utils import data_has_changed, generate_pdf, get_page_count, proccess_data
 from tex_file_processor import process_project
 
 
@@ -82,6 +82,9 @@ def main(args):
         os.path.join(args.log_dir, data["time"].replace(" ", "-") + ".json"), "w"
     ) as f:
         json.dump(data, f, indent=2)
+
+    # Update CSV that can be used for plotting
+    proccess_data(args.log_dir, os.path.join(args.log_dir, "thesis_data.csv"))
 
 
 if __name__ == "__main__":

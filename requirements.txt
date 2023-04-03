@@ -2,3 +2,4 @@ GitPython==3.1.30
 ipykernel
 pandas==1.5.3
 matplotlib==3.6.3
+plyer==2.1.0

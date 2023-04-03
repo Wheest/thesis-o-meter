@@ -3,9 +3,11 @@
 import os
 import re
 import json
+import pandas as pd
 import subprocess
 import multiprocessing
 from datetime import datetime
+import time
 
 
 def get_timestamp(filename):
@@ -24,6 +26,8 @@ def get_most_recent_file(directory) -> str:
     most_recent_file = None
     most_recent_timestamp = None
     for filename in files:
+        if ".json" not in filename:
+            continue
         timestamp = get_timestamp(filename)
         if most_recent_timestamp is None or timestamp > most_recent_timestamp:
             most_recent_timestamp = timestamp
@@ -53,17 +57,19 @@ def press_enter(pipe):
     """Covers the case that PDF latex wants us to press enter
     for whatever reason.
     """
-    try:
-        while True:
+    while True:
+        try:
             # Send the Enter key every 5 seconds
             time.sleep(5)
             pipe.write("\n")
             pipe.flush()
-    except BrokenPipeError:
-        pass  # The main process has completed, ignore the error
+        except BrokenPipeError:
+            break  # The main process has completed, ignore the error
+        except Exception as e:
+            continue
 
 
-def generate_pdf(main_tex: os.PathLike):
+def generate_pdf(main_tex: os.PathLike, timeout: int = 300):
     with subprocess.Popen(
         ("pdflatex", main_tex),
         stdin=subprocess.PIPE,
@@ -73,8 +79,33 @@ def generate_pdf(main_tex: os.PathLike):
             target=press_enter, args=(process.stdin,)
         )
         enter_manager.start()
-        process.wait()
+
+        # Change the process.wait() to process.poll() with a timeout loop
+        start_time = time.time()
+        while (time.time() - start_time) < timeout:
+            if process.poll() is not None:  # None means the process is still running
+                break  # The process has finished
+            time.sleep(5)  # Check the process status every 5 seconds
+
+        # Clean up and create a notification if necessary
         enter_manager.terminate()
+
+        exit_code = process.poll()
+
+        if exit_code is None:
+            process.terminate()
+            process.wait()
+            notification.notify(
+                title="PDF Generation Stalled",
+                message=f"The PDF generation process has been terminated due to taking longer than {timeout/60} minutes.",
+                timeout=5,
+            )
+        elif exit_code != 0:
+            notification.notify(
+                title="PDF Generation Error",
+                message=f"The PDF generation process has finished with a non-zero error code: {exit_code}",
+                timeout=5,
+            )
 
 
 def get_page_count(main_pdf: os.PathLike) -> int:
@@ -89,3 +120,29 @@ def get_page_count(main_pdf: os.PathLike) -> int:
             p = int(i.split()[1])
 
     return p
+
+
+def proccess_data(log_dir: os.PathLike, output_path: os.PathLike):
+    data = pd.DataFrame()
+    datas = []
+    for file in os.listdir(log_dir):
+        if file.endswith(".json"):
+            file_path = os.path.join(log_dir, file)
+            with open(file_path) as f:
+                datas.append(pd.DataFrame(json.load(f), index=[0]))
+
+    data = pd.concat(datas, ignore_index=True)
+
+    data.fillna(0, inplace=True)
+
+    data["date"] = pd.to_datetime(data["time"])
+    data["word_count"] = data["word_count"].astype(int)
+    data["page_count"] = data["page_count"].astype(int)
+    data["references"] = data["references"].astype(int)
+    data["figures"] = data["figures"].astype(int)
+    data["tables"] = data["tables"].astype(int)
+    data["\\includegraphics["] = data["\\includegraphics["].astype(int)
+    del data["time"]
+    data = data.sort_values(by="date")
+    data.index = data["date"]
+    data.to_csv(output_path)

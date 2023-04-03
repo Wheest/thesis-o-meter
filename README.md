@@ -54,6 +54,8 @@ The system is enabled by other free open tools:
 - [x] Extract page count
 - [x] Extract number of references
 - [x] Extract number of figures
+- [x] Add handling of stuck or crashing latex compilation
+- [x] Add automatic processing of log files into a CSV for plotting
 - [ ] Give more info with breakdown (e.g., number of sections/chapters, words per section/chapter)
 
 ## Critique
