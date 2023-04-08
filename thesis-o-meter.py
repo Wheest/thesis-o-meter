@@ -9,15 +9,7 @@ import collections
 
 from file_utils import data_has_changed, generate_pdf, get_page_count, proccess_data
 from tex_file_processor import process_project
-
-
-def get_word_count(main_tex: os.PathLike) -> int:
-    ps = subprocess.Popen(
-        ("detex", main_tex), stdout=subprocess.PIPE, cwd=os.path.dirname(main_tex)
-    )
-    output = subprocess.check_output(("wc", "--w"), stdin=ps.stdout)
-    ps.wait()
-    return int(output)
+from detex_proc import get_word_count, get_chapter_word_count
 
 
 def git_pull(git_dir: os.PathLike):
@@ -43,7 +35,7 @@ def main(args):
     # Collect and store data from PDF
     data = collections.defaultdict(int)
     data["time"] = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    data["word_count"] = get_word_count(main_tex_file)
+    data["word_count"] = get_word_count(main_tex_file, os.path.dirname(main_tex_file))
     main_pdf_file = main_tex_file.replace(".tex", ".pdf")
     data["page_count"] = get_page_count(main_pdf_file)
 
@@ -57,6 +49,8 @@ def main(args):
         "\\begin{table*}",
         "\\begin{algorithm*}",
         "\\begin{algorithm}",
+        "\\newglossaryentry{",
+        "\\newacronym{",
     ]
     counts = process_project(main_tex_file, unqiue_queries, commands)
 
@@ -68,7 +62,9 @@ def main(args):
         ("tables", "\\begin{table*}"),
         ("tables", "\\begin{table}"),
         ("algorithm", "\\begin{algorithm*}"),
-        ("tables", "\\begin{algorithm}"),
+        ("algorithm", "\\begin{algorithm}"),
+        ("glossary_entries", "\\newglossaryentry{"),
+        ("glossary_acronym", "\\newacronym{"),
     ]:
         data[x] += counts[y]
         del counts[y]
