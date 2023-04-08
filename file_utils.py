@@ -70,9 +70,26 @@ def press_enter(pipe):
             continue
 
 
-def generate_pdf(main_tex: os.PathLike, timeout: int = 100):
+def clear_aux_func(root_dir: os.PathLike):
+    # Iterate through the files in the root directory
+    for filename in os.listdir(root_dir):
+        # Check if the file ends with '.aux'
+        if filename.endswith(".aux"):
+            # Get the full path to the file
+            file_path = os.path.join(root_dir, filename)
+
+            # Remove the file
+            os.remove(file_path)
+
+
+def generate_pdf(main_tex: os.PathLike, timeout: int = 100, clear_aux: bool = False):
+
+    if clear_aux:
+        dirname, _ = os.path.split(main_tex)
+        clear_aux_func(dirname)
+
     with subprocess.Popen(
-        ("pdflatex", main_tex),
+        ("pdflatex", "-shell-escape", main_tex),
         stdin=subprocess.PIPE,
         cwd=os.path.dirname(main_tex),
     ) as process:
@@ -96,17 +113,25 @@ def generate_pdf(main_tex: os.PathLike, timeout: int = 100):
         if exit_code is None:
             process.terminate()
             process.wait()
+            # a quick and dirty way to fix some stalls is to clear the `.aux` cache
+            if not clear_aux:
+                return generate_pdf(main_tex, timeout, True)
+
+            msg = f"The PDF generation process has been terminated due to taking longer than {timeout/60} minutes."
             notification.notify(
                 title="PDF Generation Stalled",
-                message=f"The PDF generation process has been terminated due to taking longer than {timeout/60} minutes.",
+                message=msg,
                 timeout=5,
             )
+            raise Exception(msg)
         elif exit_code != 0:
+            msg = f"The PDF generation process has finished with a non-zero error code: {exit_code}"
             notification.notify(
                 title="PDF Generation Error",
-                message=f"The PDF generation process has finished with a non-zero error code: {exit_code}",
+                message=msg,
                 timeout=5,
             )
+            raise Exception(msg)
 
 
 def get_page_count(main_pdf: os.PathLike) -> int:
