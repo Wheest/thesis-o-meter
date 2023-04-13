@@ -51,6 +51,7 @@ def main(args):
         "\\begin{algorithm}",
         "\\newglossaryentry{",
         "\\newacronym{",
+        "\\begin{listing}",
     ]
     counts = process_project(main_tex_file, unqiue_queries, commands)
 
@@ -65,6 +66,7 @@ def main(args):
         ("algorithm", "\\begin{algorithm}"),
         ("glossary_entries", "\\newglossaryentry{"),
         ("glossary_acronym", "\\newacronym{"),
+        ("code_listings", "\\begin{listing}"),
     ]:
         data[x] += counts[y]
         del counts[y]
